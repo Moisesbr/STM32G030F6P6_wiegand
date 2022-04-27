@@ -131,7 +131,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t InitMessage[] = "Iniciando Leitor Wiegand v1.7\r\n"; //Data to send
+  uint8_t InitMessage[] = "Iniciando Leitor Wiegand v1.8\r\n"; //Data to send
   HAL_UART_Transmit(&huart1, InitMessage, sizeof(InitMessage), 10);// Sending in normal mode
   HAL_Delay(100);
   /* USER CODE END 2 */
@@ -149,7 +149,7 @@ int main(void)
       wig_flag_inrt = 1;
       char str[64] = {0,};
       // snprintf(str, 64, "WG0: HEX=0x%lX - DEC=%lu, Protocol %d \n\r", wcode, wcode, wtype);
-      snprintf(str, 64, "wg0-%lu\n\r", wcode);
+      snprintf(str, 64, "wg1-%lu\n\r", wcode);
       HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 1000);
     }
     if (wig_available(&wg1))
@@ -159,7 +159,7 @@ int main(void)
       int16_t wtype = getWiegandType(&wg1);
       wig_flag_inrt = 1;
       char str[64] = {0,};
-      snprintf(str, 64, "wg1-%lu\n\r", wcode);
+      snprintf(str, 64, "wg2-%lu\n\r", wcode);
       HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 1000);
     }
     /* USER CODE END WHILE */
