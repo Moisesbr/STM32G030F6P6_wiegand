@@ -35,6 +35,7 @@ volatile uint8_t wig_flag_inrt = 1;
 #define D1_WG0        GPIO_PIN_12
 #define D0_WG1        GPIO_PIN_5
 #define D1_WG1        GPIO_PIN_4
+#define LED           GPIO_PIN_3
 
 /* USER CODE END PTD */
 
@@ -131,18 +132,28 @@ int main(void)
   MX_USART1_UART_Init();
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t InitMessage[] = "Iniciando Leitor Wiegand v1.8\r\n"; //Data to send
+  uint8_t InitMessage[] = "Iniciando Leitor Wiegand v1.9\r\n"; //Data to send
   HAL_UART_Transmit(&huart1, InitMessage, sizeof(InitMessage), 10);// Sending in normal mode
   HAL_Delay(100);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint8_t led_blink_count = 0;
+  unsigned int turnOffLED = 0;
+  for (led_blink_count = 0; led_blink_count < 3; ++led_blink_count) {
+	  HAL_GPIO_TogglePin(GPIOA, LED);
+	  HAL_Delay(100);
+	  HAL_GPIO_TogglePin(GPIOA, LED);
+	  HAL_Delay(100);
+  }
+
   while (1)
   {
 	HAL_IWDG_Refresh(&hiwdg); //Refresh must be < 4000ms
 	if (wig_available(&wg0))
     {
+	  HAL_GPIO_TogglePin(GPIOA, LED);
       wig_flag_inrt = 0;
       uint32_t wcode = getCode(&wg0);
       int16_t wtype = getWiegandType(&wg0);
@@ -151,9 +162,11 @@ int main(void)
       // snprintf(str, 64, "WG0: HEX=0x%lX - DEC=%lu, Protocol %d \n\r", wcode, wcode, wtype);
       snprintf(str, 64, "wg1-%lu\n\r", wcode);
       HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 1000);
+      // HAL_GPIO_TogglePin(GPIOA, LED);
     }
     if (wig_available(&wg1))
     {
+      HAL_GPIO_TogglePin(GPIOA, LED);
       wig_flag_inrt = 0;
       uint32_t wcode = getCode(&wg1);
       int16_t wtype = getWiegandType(&wg1);
@@ -161,6 +174,7 @@ int main(void)
       char str[64] = {0,};
       snprintf(str, 64, "wg2-%lu\n\r", wcode);
       HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 1000);
+      // HAL_GPIO_TogglePin(GPIOA, LED);
     }
     /* USER CODE END WHILE */
 
