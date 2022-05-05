@@ -49,7 +49,7 @@ volatile uint8_t wig_flag_inrt = 1;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-IWDG_HandleTypeDef hiwdg;
+ IWDG_HandleTypeDef hiwdg;
 
 UART_HandleTypeDef huart1;
 
@@ -147,7 +147,7 @@ int main(void)
 	  HAL_GPIO_TogglePin(GPIOA, LED);
 	  HAL_Delay(100);
   }
-
+  
   while (1)
   {
 	HAL_IWDG_Refresh(&hiwdg); //Refresh must be < 4000ms
@@ -369,4 +369,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
